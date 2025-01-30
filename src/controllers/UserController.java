@@ -57,7 +57,13 @@ public class UserController implements IUserController {
     @Override
     public Boolean isLecturer(String email) {
         User user = userRepository.getUserByEmail(email);
-        return (user == null) || (!user.getRole().equals("lecturer")) ? false : true;
+        if (user == null) {
+            return false;
+        }
+        if (user.getRole().equalsIgnoreCase("lecturer")) {
+            return false;
+        }
+        return true;
     }
 
     @Override

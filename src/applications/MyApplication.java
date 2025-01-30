@@ -1,3 +1,5 @@
+package applications;
+
 import controllers.interfaces.IUserController;
 
 import java.util.InputMismatchException;
@@ -5,9 +7,11 @@ import java.util.Scanner;
 
 public class MyApplication {
     private final IUserController controller;
+    private final CourseApplication courseApplication;
     private final Scanner scanner=new Scanner(System.in);
-    public MyApplication(IUserController controller) {
+    public MyApplication(IUserController controller, CourseApplication courseApplication) {
         this.controller = controller;
+        this.courseApplication = courseApplication;
     }
 
     private void mainMenu(){
@@ -62,7 +66,11 @@ public class MyApplication {
         String email = scanner.nextLine();
         System.out.println("Enter your role: ");
         String role = scanner.nextLine();
-        System.out.println(controller.createUser(username, password, email, role));
+        String text = controller.createUser(username, password, email, role);
+        System.out.println(text);
+        if (text.equals("User created")){
+            courseApplication.startForCourse();
+        }
     }
 
     private void login() {
@@ -70,7 +78,11 @@ public class MyApplication {
         String email = scanner.nextLine();
         System.out.println("Please enter your password: ");
         String password = scanner.nextLine();
-        System.out.println(controller.login(email, password));
+        String text = controller.login(email, password);
+        System.out.println(text);
+        if (text.equals("Login successful")){
+            courseApplication.startForCourse();
+        }
     }
 }
 

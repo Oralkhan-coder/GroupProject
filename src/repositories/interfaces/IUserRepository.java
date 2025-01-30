@@ -1,6 +1,5 @@
 package repositories.interfaces;
 
-import controllers.UserController;
 import models.User;
 
 import java.util.List;
