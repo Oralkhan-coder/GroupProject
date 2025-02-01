@@ -1,0 +1,1 @@
+The Student Management System is a platform designed to facilitate interaction between students, faculty, and administrators in an educational environment. It allows users to register accounts, view courses, and enroll in them. Administrators have the ability to manage users
