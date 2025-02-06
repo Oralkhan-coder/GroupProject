@@ -1,76 +1,64 @@
 package models;
 
+import java.util.List;
+
 public class User {
     private int id;
     private String username;
     private String password;
     private String email;
     private String role;
+    private int level;
+    private List<Course> courses;
+    private boolean isMentor;
 
-    public User() {
-
-    }
-
-    public User(String username, String password, String email, String role) {
-        setUsername(username);
-        setPassword(password);
-        setEmail(email);
-        setRole(role);
-    }
-
-    public User(int id, String username,  String password,String email, String role) {
-        this(username, password, email, role);
-        setId(id);
+    public User(int id, String username, String password, String email, String role, int level) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.level = level;
+        this.isMentor = canBeMentor();
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getPassword() {
+        return password;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRole() {
         return role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public int getLevel() {
+        return level;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public boolean isMentor() {
+        return isMentor;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public boolean canBeMentor() {
+        return role.equals("STUDENT") && level > 1;
     }
 }

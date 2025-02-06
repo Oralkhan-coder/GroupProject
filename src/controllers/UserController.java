@@ -8,34 +8,35 @@ import java.util.List;
 
 public class UserController implements IUserController {
     private final IUserRepository userRepository;
+
     public UserController(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public String login(String email, String password) {
-        User user=userRepository.getUserByEmail(email);
+        User user = userRepository.getUserByEmail(email);
 
-        if(user==null){
+        if (user == null) {
             return "User not found";
         }
-        if (!user.getEmail().equals(email) && !user.getPassword().equals(password)) {
-            return "Wrong DATA";
+        if (!user.getPassword().equals(password)) {
+            return "Wrong password";
         }
-
         return "Login successful";
     }
 
     @Override
-    public String createUser(String username, String password, String email, String role) {
-        User newUser = new User(username, password, email, role);
+    public String createUser(String username, String password, String email, String role, int level) {
+        User newUser = new User(0, username, password, email, role, level);
         boolean result = userRepository.createUser(newUser);
         return result ? "User created" : "User not created";
     }
 
     @Override
-    public String updateUser(int id, String username, String password, String email, String role) {
-        return "";
+    public String updateUser(int id, String username, String password, String email, String role, int level) {
+        boolean result = userRepository.updateUser(id, username, password, email, role, level);
+        return result ? "User updated successfully" : "User update failed";
     }
 
     @Override
@@ -47,9 +48,12 @@ public class UserController implements IUserController {
     @Override
     public String getAllUsers() {
         List<User> users = userRepository.getAllUsers();
+        if (users.isEmpty()) {
+            return "No users found";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (User user : users) {
-            stringBuilder.append(user.toString());
+            stringBuilder.append(user.toString()).append("\n");
         }
         return stringBuilder.toString();
     }
@@ -57,18 +61,27 @@ public class UserController implements IUserController {
     @Override
     public Boolean isLecturer(String email) {
         User user = userRepository.getUserByEmail(email);
-        if (user == null) {
-            return false;
-        }
-        if (user.getRole().equalsIgnoreCase("lecturer")) {
-            return false;
-        }
-        return true;
+        return user != null && user.getRole().equalsIgnoreCase("LECTURER");
     }
 
     @Override
     public String getUserByRole(String role) {
-        return "";
+        List<User> users = userRepository.getUserByRole(role);
+        if (users.isEmpty()) {
+            return "No users found with role: " + role;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (User user : users) {
+            stringBuilder.append(user.toString()).append("\n");
+        }
+        return stringBuilder.toString();
     }
 
+    public List<User> getAllStudents() {
+        return userRepository.getAllStudents();
+    }
+
+    public User getStudentWithCourses(int id) {
+        return userRepository.getStudentWithCourses(id);
+    }
 }

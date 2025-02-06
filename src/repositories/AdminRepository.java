@@ -32,7 +32,8 @@ public class AdminRepository implements IAdminRepository {
                         result.getString("username"),
                         result.getString("password"),
                         result.getString("email"),
-                        result.getString("role").trim()));
+                        result.getString("role").trim(),
+                        result.getInt("level")));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

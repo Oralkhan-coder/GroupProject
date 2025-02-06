@@ -67,9 +67,11 @@ public class MyApplication {
         String password = scanner.nextLine();
         System.out.println("Enter your email: ");
         String email = scanner.nextLine();
-        System.out.println("Enter your role: ");
+        System.out.println("Enter your role(student/lecturer): ");
         String role = scanner.nextLine();
-        String text = controller.createUser(username, password, email, role);
+        System.out.println("Enter your level: ");
+        int level = scanner.nextInt();
+        String text = controller.createUser(username, password, email, role,level);
         System.out.println(text);
         if (text.equals("User created")){
             courseApplication.startForCourse();

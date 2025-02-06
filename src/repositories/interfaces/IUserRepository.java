@@ -9,7 +9,12 @@ public interface IUserRepository {
     User getUserByEmail(String email);
     List<User> getAllUsers();
     User getUserById(int id);
-    User getUserByRole(String role);
+    List<User> getUserByRole(String role);
 
-    boolean updateUser(int id, String username, String password, String email, String role);
+    boolean updateUser(int id, String username, String password, String email, String role, int level);
+
+
+    List<User> getAllStudents();
+
+    User getStudentWithCourses(int id);
 }

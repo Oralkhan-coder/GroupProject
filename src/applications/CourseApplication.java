@@ -1,6 +1,7 @@
 package applications;
 
 import controllers.CourseController;
+import controllers.interfaces.IRegistrationController;
 import controllers.interfaces.IUserController;
 
 import java.util.InputMismatchException;
@@ -9,10 +10,12 @@ import java.util.Scanner;
 public class CourseApplication {
     private final IUserController userController;
     private final CourseController controller;
+    private final IRegistrationController regController;
     private final Scanner scanner = new Scanner(System.in);
-    public CourseApplication(IUserController userController, CourseController controller) {
+    public CourseApplication(IUserController userController, CourseController controller, IRegistrationController regController) {
         this.userController = userController;
         this.controller = controller;
+        this.regController = regController;
     }
 
     public void mainMenuForUsers() {
@@ -171,5 +174,70 @@ public class CourseApplication {
         String email = scanner.nextLine();
 
         System.out.println(controller.getAllCoursesByEmail(email));
+    }
+    private void registrationForCourseMenu() {
+        System.out.println();
+        System.out.println("Would you like to register a new course?");
+        System.out.println("Choose one of the following options: ");
+        System.out.println("1. Register a new course");
+        System.out.println("2. Logout from course");
+        System.out.println("0. Exit");
+        System.out.print("Enter your choice: ");
+    }
+
+    public void startRegistrationForCourse() {
+        while (true) {
+            registrationForCourseMenu();
+            try {
+                int option = scanner.nextInt();
+                scanner.nextLine();
+                switch (option) {
+                    case 1:
+                        registerForCourse();
+                        break;
+                    case 2:
+                        logoutFromCourse();
+                        break;
+                    default:return;
+                }
+            } catch (InputMismatchException exception) {
+                System.out.println("Please enter a valid option!");
+            } catch (Exception exception) {
+                System.out.println(exception.getMessage());
+            }
+        }
+    }
+
+    private void registerForCourse() {
+        System.out.println();
+        System.out.println("You can register a new course here!");
+        System.out.println("Enter your course ID: ");
+        Long courseId  = scanner.nextLong();
+        scanner.nextLine();
+        System.out.println("Enter your email: ");
+        String email  = scanner.nextLine();
+        System.out.println();
+
+        System.out.println(regController.registerForCourse(courseId, email));
+    }
+
+    private void seeAllCoursesByEmail() {
+        System.out.println();
+        System.out.println("Here you can see all your courses you registered: ");
+        System.out.println("Enter your email to see all your courses: ");
+        String email = scanner.nextLine();
+        System.out.println(regController.getAllCoursesByUserEmail(email));
+    }
+
+    private void logoutFromCourse() {
+        System.out.println();
+        System.out.println("Here you can logout from your course: ");
+        System.out.println("Enter your email to logout: ");
+        String email = scanner.nextLine();
+        System.out.println("Enter your course ID for logout: ");
+        Long courseId = scanner.nextLong();
+        scanner.nextLine();
+
+        System.out.println(regController.logoutFromCourse(email, courseId));
     }
 }

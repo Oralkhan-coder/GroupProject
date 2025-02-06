@@ -17,15 +17,20 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public boolean createUser(User user) {
-        try {
-            Connection connection = database.getConnection();
-            String sql = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getRole());
-            preparedStatement.execute();
+        try (Connection connection = database.getConnection()) {
+            String sql = "INSERT INTO users (username, password, email, role" +
+                    (user.getRole().equals("STUDENT") ? ", level" : "") + ") VALUES (?, ?, ?, ?" +
+                    (user.getRole().equals("STUDENT") ? ", ?" : "") + ")";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getRole());
+            if (user.getRole().equals("STUDENT")) {
+                stmt.setInt(5, user.getLevel());
+            }
+            stmt.executeUpdate();
+
             return true;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -34,51 +39,19 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public boolean updateUser(int id, String username, String password, String email, String role) {
-        return false;
-    }
-
-    @Override
-    public User getUserById(int id) {
-        try {
-            Connection connection = database.getConnection();
-            String sql= "SELECT * FROM users WHERE id = ?";
-            PreparedStatement statement= connection.prepareStatement(sql);
-
-            statement.setInt(1, id);
-            ResultSet result=statement.executeQuery();
-            if (result.next()){
-                return new User(result.getInt("id"),
-                        result.getString("username"),
-                        result.getString("password"),
-                        result.getString("email"),
-                        result.getString("role"));
-
-            }
-
-
-        }catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
     public User getUserByEmail(String email) {
-        try {
-            Connection connection = database.getConnection();
-            String sql = "SELECT * FROM users WHERE email = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, email);
-            ResultSet result = statement.executeQuery();
-
+        try (Connection connection = database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE email = ?")) {
+            stmt.setString(1, email);
+            ResultSet result = stmt.executeQuery();
             if (result.next()) {
                 return new User(
                         result.getInt("id"),
                         result.getString("username"),
                         result.getString("password"),
                         result.getString("email"),
-                        result.getString("role")
+                        result.getString("role"),
+                        result.getInt("level")
                 );
             }
         } catch (SQLException e) {
@@ -87,32 +60,87 @@ public class UserRepository implements IUserRepository {
         return null;
     }
 
+    @Override
+    public List<User> getUserByRole(String role) {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE role = ?")) {
+            stmt.setString(1, role);
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
+                users.add(new User(
+                        result.getInt("id"),
+                        result.getString("username"),
+                        result.getString("password"),
+                        result.getString("email"),
+                        result.getString("role"),
+                        result.getInt("level")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return users;
+    }
 
     @Override
-    public User getUserByRole(String role) {
+    public List<User> getAllStudents() {
+        return List.of();
+    }
+
+    @Override
+    public User getStudentWithCourses(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean updateUser(int id, String username, String password, String email, String role, int level) {
+        return false;
+    }
+
+    @Override
+    public User getUserById(int id) {
+        try (Connection connection = database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
+            stmt.setInt(1, id);
+            ResultSet result = stmt.executeQuery();
+            if (result.next()) {
+                int level = result.getString("role").equals("STUDENT") ? result.getInt("level") : 0;
+                return new User(
+                        result.getInt("id"),
+                        result.getString("username"),
+                        result.getString("password"),
+                        result.getString("email"),
+                        result.getString("role"),
+                        level
+                );
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 
     @Override
     public List<User> getAllUsers() {
-        try {
-            Connection connection = database.getConnection();
-            String sql = "SELECT * FROM users";
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(sql);
-            List<User> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+        try (Connection connection = database.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet result = stmt.executeQuery("SELECT * FROM users")) {
             while (result.next()) {
-                User user = new User(result.getInt("id"),
+                users.add(new User(
+                        result.getInt("id"),
                         result.getString("username"),
                         result.getString("password"),
                         result.getString("email"),
-                        result.getString("role"));
-                users.add(user);
+                        result.getString("role"),
+                        result.getInt("level")
+                ));
             }
-            return users;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return users;
     }
 }
