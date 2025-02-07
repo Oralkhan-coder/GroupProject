@@ -74,7 +74,7 @@ public class MyApplication {
         String text = controller.createUser(username, password, email, role,level);
         System.out.println(text);
         if (text.equals("User created")){
-            courseApplication.startForCourse();
+            startHomeMenu();
         }
     }
 
@@ -86,7 +86,42 @@ public class MyApplication {
         String text = controller.login(email, password);
         System.out.println(text);
         if (text.equals("Login successful")){
-            courseApplication.startForCourse();
+            startHomeMenu();
+        }
+    }
+
+    private void homeMenu() {
+        System.out.println();
+        System.out.println("Welcome to My Application");
+        System.out.println("Select one of the following options:");
+        System.out.println("1. Course Catalog");
+        System.out.println("2. Admin Panel");
+        System.out.println("0. Log out");
+    }
+
+    public void startHomeMenu() {
+        while(true){
+            homeMenu();
+            try {
+                int option = scanner.nextInt();
+                scanner.nextLine();
+                switch (option) {
+                    case 1:
+                        courseApplication.startForCourse();
+                        break;
+                    case 2:
+                        adminApplication.startForAdmin();
+                        break;
+                    default:
+                        return;
+                }
+            } catch (InputMismatchException e){
+                System.out.println("Please enter a valid option!" + e);
+                scanner.nextLine(); //to ignore incorrect input
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            System.out.println("----------------------------------------");
         }
     }
 

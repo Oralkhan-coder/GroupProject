@@ -1,5 +1,9 @@
 package applications;
 
+<<<<<<< Updated upstream
+=======
+import controllers.AdminController;
+>>>>>>> Stashed changes
 import controllers.interfaces.IAdminController;
 
 import java.util.InputMismatchException;
@@ -7,8 +11,13 @@ import java.util.Scanner;
 
 public class AdminApplication {
     private final Scanner scanner = new Scanner(System.in);
+<<<<<<< Updated upstream
     private final IAdminController adminController;
     public AdminApplication(IAdminController adminController) {
+=======
+    private final AdminController adminController;
+    public AdminApplication(AdminController adminController) {
+>>>>>>> Stashed changes
         this.adminController = adminController;
     }
 
