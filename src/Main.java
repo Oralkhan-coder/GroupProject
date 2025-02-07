@@ -26,21 +26,18 @@ public class Main {
                 "postgres", "kometa0707", "users");
 
         IUserRepository repo = new UserRepository(database);
-        UserController controller = new UserController(repo);
         ICourseRepository courseRepo = new CourseRepository(database);
-        CourseController courseController = new CourseController(courseRepo, repo);
         IRegistrationRepository regRepo = new RegistrationRepository(database);
-        IRegistrationController regController = new RegistrationController(courseRepo, repo, regRepo);
-        CourseApplication courseApp = new CourseApplication(controller, courseController, regController);
         IAdminRepository adminRepo = new AdminRepository(database);
+
+        UserController controller = new UserController(repo);
+        CourseController courseController = new CourseController(courseRepo, repo);
+        IRegistrationController regController = new RegistrationController(courseRepo, repo, regRepo);
         IAdminController adminController = new AdminController(repo, adminRepo, courseRepo);
+
+        CourseApplication courseApp = new CourseApplication(controller, courseController, regController);
         AdminApplication adminApplication = new AdminApplication(adminController);
         MyApplication app = new MyApplication(controller, courseApp, adminApplication);
-        CourseApplication courseApp = new CourseApplication(controller, courseController);
-        IAdminRepository adminRepo = new AdminRepository(database);
-        AdminController adminController = new AdminController(repo,  adminRepo, courseRepo);
-        AdminApplication adminApp = new AdminApplication(adminController);
-        MyApplication app = new MyApplication(controller, courseApp, adminApp);
         app.start();
         database.close();
     }

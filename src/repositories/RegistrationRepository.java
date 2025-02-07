@@ -32,21 +32,6 @@ public class RegistrationRepository implements IRegistrationRepository {
     }
 
     @Override
-    public boolean unregisterStudentFromCourse(int userId, int courseId) {
-        try (Connection connection = database.getConnection()) {
-            String sql = "DELETE FROM student_courses WHERE student_id = ? AND course_id = ?";
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, userId);
-            stmt.setInt(2, courseId);
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
-
-    @Override
     public List<Course> getCoursesByUserId(int userId) {
         List<Course> courses = new ArrayList<>();
         try (Connection connection = database.getConnection();
@@ -57,11 +42,17 @@ public class RegistrationRepository implements IRegistrationRepository {
             stmt.setInt(1, userId);
             ResultSet result = stmt.executeQuery();
             while (result.next()) {
-                courses.add(new Course(result.getInt("id"), result.getString("name")));
+                courses.add(new
+                        Course(result.getString("name"), result.getString("discription"), result.getLong("id")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return courses;
+    }
+
+    @Override
+    public boolean logoutFromCourse(int userId, Long courseId) {
+        return false;
     }
 }

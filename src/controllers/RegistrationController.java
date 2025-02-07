@@ -34,6 +34,26 @@ public class RegistrationController implements IRegistrationController {
     }
 
     @Override
+    public String getStudentFullInfo(int studentId) {
+        User user = userRepository.getUserById(studentId);
+        if (user == null) {
+            return "Student not found.";
+        }
+        if (!user.getRole().equals("admin") && !user.getRole().equals("lecturer")) {
+            return "Access denied. Only admins and lecturers can request student information.";
+        }
+
+        List<Course> courses = regRepository.getCoursesByUserId(studentId);
+        StringBuilder studentFullInfo = new StringBuilder();
+        for (Course course : courses) {
+            studentFullInfo.append(course.toString()).append("\n");
+        }
+
+        return studentFullInfo.toString();
+    }
+
+
+    @Override
     public String getAllCoursesByUserEmail(String email) {
         User user = userRepository.getUserByEmail(email);
         if (user == null) {
