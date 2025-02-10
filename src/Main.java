@@ -1,45 +1,45 @@
 import applications.AdminApplication;
-import applications.CourseApplication;
-import applications.MyApplication;
-import controllers.AdminController;
-import controllers.CourseController;
-import controllers.RegistrationController;
-import controllers.UserController;
-import controllers.interfaces.IAdminController;
-import controllers.interfaces.ICourseController;
-import controllers.interfaces.IRegistrationController;
-import controllers.interfaces.IUserController;
+import applications.HomeApplication;
+import applications.MainApplication;
+import applications.service.AssigmentService;
+import applications.service.CourseService;
+import applications.service.VideoService;
+import controllers.*;
 import data.Postgre;
 import data.interfaces.JB;
-import repositories.AdminRepository;
-import repositories.CourseRepository;
-import repositories.RegistrationRepository;
-import repositories.UserRepository;
-import repositories.interfaces.IAdminRepository;
-import repositories.interfaces.ICourseRepository;
-import repositories.interfaces.IRegistrationRepository;
-import repositories.interfaces.IUserRepository;
+import repositories.*;
+import repositories.interfaces.*;
+
 
 public class Main {
     public static void main(String[] args) {
         JB database = new Postgre("jdbc:postgresql://localhost:5432",
-                "postgres", "kometa0707", "users");
+                "postgres", "Oral2007", "moodle");
 
-        IUserRepository repo = new UserRepository(database);
-        ICourseRepository courseRepo = new CourseRepository(database);
-        IRegistrationRepository regRepo = new RegistrationRepository(database);
-        IAdminRepository adminRepo = new AdminRepository(database);
+        IUserRepository userRepository = new UserRepository(database);
+        ICourseRepository courseRepository = new CourseRepository(database);
+        IAdminRepository adminRepository = new AdminRepository(database);
+        IRegistrationRepository regRepository = new RegistrationRepository(database);
+        IVideoRepository videoRepository = new VideoRepository(database);
 
-        UserController controller = new UserController(repo);
-        CourseController courseController = new CourseController(courseRepo, repo);
-        IRegistrationController regController = new RegistrationController(courseRepo, repo, regRepo);
-        IAdminController adminController = new AdminController(repo, adminRepo, courseRepo);
 
-        CourseApplication courseApp = new CourseApplication(controller, courseController, regController);
+        UserController userController = new UserController(userRepository);
+        CourseController courseController = new CourseController(userRepository, courseRepository);
+        AdminController adminController = new AdminController(userRepository, courseRepository, adminRepository);
+        RegistrationController registrationController = new RegistrationController(userRepository, courseRepository, regRepository);
+        VideoController videoController = new VideoController(videoRepository);
+
+
+        CourseService courseService = new CourseService(courseController, registrationController);
+        VideoService videoService = new VideoService(videoController);
+        AssigmentService assigmentService = new AssigmentService();
+
+
         AdminApplication adminApplication = new AdminApplication(adminController);
-        MyApplication app = new MyApplication(controller, courseApp, adminApplication);
-        app.start();
-        database.close();
+        HomeApplication homeApplication = new HomeApplication(userController, adminApplication, courseService, videoService, assigmentService);
+        MainApplication application = new MainApplication(userController, homeApplication);
+
+        application.startMainMenu();
     }
 }
 

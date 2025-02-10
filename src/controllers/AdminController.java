@@ -10,10 +10,10 @@ import repositories.interfaces.IUserRepository;
 import java.util.List;
 
 public class AdminController implements IAdminController {
-    private final ICourseRepository courseRepository;
     private final IUserRepository userRepository;
+    private final ICourseRepository courseRepository;
     private final IAdminRepository adminRepository;
-    public AdminController(IUserRepository userRepository, IAdminRepository adminRepository, ICourseRepository courseRepository) {
+    public AdminController(IUserRepository userRepository, ICourseRepository courseRepository, IAdminRepository adminRepository) {
         this.userRepository = userRepository;
         this.adminRepository = adminRepository;
         this.courseRepository = courseRepository;

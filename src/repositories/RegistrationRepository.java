@@ -43,7 +43,7 @@ public class RegistrationRepository implements IRegistrationRepository {
             ResultSet result = stmt.executeQuery();
             while (result.next()) {
                 courses.add(new
-                        Course(result.getString("name"), result.getString("discription"), result.getLong("id")));
+                        Course(result.getString("name"), result.getString("discription"), result.getInt("id")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

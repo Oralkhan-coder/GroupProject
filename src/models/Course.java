@@ -7,14 +7,14 @@ public class Course {
     private Long id;
     private String name;
     private String description;
-    private Long lecturerId;
+    private int lecturerId;
     private Date createdAt;
 
     //    Constructors
     public Course() {
     }
 
-    public Course(String name, String description, Long lecturerId) {
+    public Course(String name, String description, int lecturerId) {
         this.lecturerId = lecturerId;
         this.name = name;
         this.description = description;
@@ -26,14 +26,14 @@ public class Course {
         this.createdAt = createdAt;
     }
 
-    public Course(String name, String description, Long lecturerId, Date createdAt) {
+    public Course(String name, String description, int lecturerId, Date createdAt) {
         this.name = name;
         this.description = description;
         this.lecturerId = lecturerId;
         this.createdAt = createdAt;
     }
 
-    public Course(Long id, String name, String description, Long lecturerId, Date createdAt) {
+    public Course(Long id, String name, String description, int lecturerId, Date createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -58,11 +58,11 @@ public class Course {
         this.description = description;
     }
 
-    public Long getLecturerId() {
+    public int getLecturerId() {
         return lecturerId;
     }
 
-    public void setLecturerId(Long lecturerId) {
+    public void setLecturerId(int lecturerId) {
         this.lecturerId = lecturerId;
     }
 

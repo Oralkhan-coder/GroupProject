@@ -89,7 +89,7 @@ public class CourseRepository implements ICourseRepository {
                 return new Course(result.getLong("id"),
                         result.getString("name"),
                         result.getString("description"),
-                        result.getLong("lecturer_id"),
+                        result.getInt("lecturer_id"),
                         result.getTimestamp("created_at"));
             }
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class CourseRepository implements ICourseRepository {
                 Course course = new Course(result.getLong("id"),
                         result.getString("name"),
                         result.getString("description"),
-                        result.getLong("lecturer_id"),
+                        result.getInt("lecturer_id"),
                         result.getTimestamp("created_at"));
                 courses.add(course);
             }
@@ -136,7 +136,7 @@ public class CourseRepository implements ICourseRepository {
                             result.getLong("id"),
                             result.getString("name"),
                             result.getString("description"),
-                            result.getLong("lecturer_id"),
+                            result.getInt("lecturer_id"),
                             result.getTimestamp("created_at")
                     ));
                 }

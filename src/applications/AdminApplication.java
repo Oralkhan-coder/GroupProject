@@ -8,8 +8,9 @@ import java.util.Scanner;
 
 public class AdminApplication {
     private final Scanner scanner = new Scanner(System.in);
-    private final IAdminController adminController;
-    public AdminApplication(IAdminController adminController) {
+    private final AdminController adminController;
+
+    public AdminApplication(AdminController adminController) {
         this.adminController = adminController;
     }
 
@@ -25,7 +26,7 @@ public class AdminApplication {
         System.out.println("0. Exit");
     }
 
-    public void startForAdmin() {
+    public void startMenuForAdmin() {
         if(isAdmin()) {
             while (true) {
                 adminMenu();

@@ -9,17 +9,21 @@ import repositories.interfaces.IUserRepository;
 import java.util.List;
 
 public class CourseController implements ICourseController {
-    private final ICourseRepository courseRepo;
     private final IUserRepository userRepo;
+    private final ICourseRepository courseRepo;
 
-    public CourseController(ICourseRepository courseRepo, IUserRepository userRepo) {
-        this.courseRepo = courseRepo;
+    public CourseController(IUserRepository userRepo, ICourseRepository courseRepo) {
         this.userRepo = userRepo;
+        this.courseRepo = courseRepo;
     }
 
     @Override
-    public String createCourse(String name, String description, Long lecturerId) {
-        Course course = new Course(name, description, lecturerId);
+    public String createCourse(String email, String name, String description) {
+        User user = userRepo.getUserByEmail(email);
+        if (user == null) {
+            return "User NOT_FOUND";
+        }
+        Course course = new Course(name, description, user.getId());
         boolean result = courseRepo.createCourse(course);
         return result ? "Course successfully created" : "Failed";
     }
@@ -38,10 +42,17 @@ public class CourseController implements ICourseController {
     }
 
     @Override
-    public String updateCourse(Long courseId, String name, String description) {
+    public String updateCourse(String email, Long courseId, String name, String description) {
         Course course = courseRepo.getCourseById(courseId);
+        User user = userRepo.getUserByEmail(email);
+        if (user == null) {
+            return "User NOT_FOUND";
+        }
         if (course == null) {
-            return "Course not found";
+            return "Course NOT_FOUND";
+        }
+        if (course.getLecturerId() != user.getId()) {
+            return "You cannot update this course!";
         }
         return courseRepo.updateCourse(courseId, name, description) ? "Successfully updated" : "Failed";
     }
@@ -75,7 +86,7 @@ public class CourseController implements ICourseController {
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (Course course : userCourses) {
-            stringBuilder.append(course.toString());
+            stringBuilder.append(course.toString()).append("\n").append("\n").append("\n");
         }
         return stringBuilder.toString();
     }

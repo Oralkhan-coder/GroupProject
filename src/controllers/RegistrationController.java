@@ -14,8 +14,7 @@ public class RegistrationController implements IRegistrationController {
     private final IUserRepository userRepository;
     private final IRegistrationRepository regRepository;
 
-    public RegistrationController(ICourseRepository courseRepository, IUserRepository userRepository,
-                                  IRegistrationRepository regRepository) {
+    public RegistrationController(IUserRepository userRepository, ICourseRepository courseRepository, IRegistrationRepository regRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.regRepository = regRepository;
