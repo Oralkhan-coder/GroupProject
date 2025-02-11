@@ -73,7 +73,7 @@ public class AssignmentRepository implements IAssignmentRepository {
                         result.getLong("id"),
                         result.getString("title"),
                         result.getString("description"),
-                        (LocalDateTime) result.getObject("deadline"),
+                        result.getTimestamp("deadline").toLocalDateTime(),
                         result.getLong("course_id")
                 );
             }
@@ -98,7 +98,7 @@ public class AssignmentRepository implements IAssignmentRepository {
                             result.getLong("id"),
                             result.getString("title"),
                             result.getString("description"),
-                            (LocalDateTime) result.getObject("deadline"),
+                            result.getTimestamp("deadline").toLocalDateTime(),
                             result.getLong("course_id")
                     ));
                 }

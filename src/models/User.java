@@ -61,4 +61,9 @@ public class User {
     public boolean canBeMentor() {
         return role.equals("STUDENT") && level > 1;
     }
+
+    @Override
+    public String toString() {
+        return id +") " + username + " " + email + " " + role + " " + level + " " + courses + " " + isMentor + "\n";
+    }
 }

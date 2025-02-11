@@ -86,6 +86,6 @@ public class Course {
 
     public String toString() {
         return id + ") " + name + ":\n" + "\t" + description
-                + "\n" + "Created at: " + createdAt.toString();
+                + "\n" + "Created at: " + createdAt.toString() + "\n";
     }
 }

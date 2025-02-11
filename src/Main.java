@@ -3,6 +3,7 @@ import applications.HomeApplication;
 import applications.MainApplication;
 import applications.service.AssigmentService;
 import applications.service.CourseService;
+import applications.service.SubmissionService;
 import applications.service.VideoService;
 import controllers.*;
 import data.Postgre;
@@ -23,6 +24,7 @@ public class Main {
         IRegistrationRepository regRepository = new RegistrationRepository(database);
         IVideoRepository videoRepository = new VideoRepository(database);
         IAssignmentRepository assignmentRepository = new AssignmentRepository(database);
+        ISubmissionRepository submissionRepository = new SubmissionRepository(database);
 
 
         UserController userController = new UserController(userRepository);
@@ -31,15 +33,18 @@ public class Main {
         RegistrationController registrationController = new RegistrationController(userRepository, courseRepository, regRepository);
         VideoController videoController = new VideoController(videoRepository);
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
+        SubmissionController submissionController = new SubmissionController(userRepository, courseRepository, submissionRepository);
 
 
         CourseService courseService = new CourseService(courseController, registrationController);
         VideoService videoService = new VideoService(videoController);
-        AssigmentService assigmentService = new AssigmentService(assignmentController);
+        AssigmentService assigmentService = new AssigmentService(assignmentController, submissionController);
+        SubmissionService submissionService = new SubmissionService(assignmentController, submissionController);
 
 
         AdminApplication adminApplication = new AdminApplication(adminController);
-        HomeApplication homeApplication = new HomeApplication(userController, adminApplication, courseService, videoService, assigmentService);
+        HomeApplication homeApplication = new HomeApplication(userController, adminApplication,
+                courseService, videoService, assigmentService, submissionService);
         MainApplication application = new MainApplication(userController, homeApplication);
 
 

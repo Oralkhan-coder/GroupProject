@@ -2,6 +2,7 @@ package applications;
 
 import applications.service.AssigmentService;
 import applications.service.CourseService;
+import applications.service.SubmissionService;
 import applications.service.VideoService;
 import controllers.UserController;
 
@@ -15,8 +16,11 @@ public class HomeApplication {
     private final CourseService courseService;
     private final VideoService videoService;
     private final AssigmentService assigmentService;
+    private final SubmissionService submissionService;
 
-    public HomeApplication(UserController userController, AdminApplication adminApplication, CourseService courseService, VideoService videoService, AssigmentService assigmentService) {
+    public HomeApplication(UserController userController, AdminApplication adminApplication,
+                           CourseService courseService, VideoService videoService,
+                           AssigmentService assigmentService, SubmissionService submissionService) {
         this.userController = userController;
 
         this.adminApplication = adminApplication;
@@ -24,6 +28,7 @@ public class HomeApplication {
         this.courseService = courseService;
         this.videoService = videoService;
         this.assigmentService = assigmentService;
+        this.submissionService = submissionService;
     }
 
 
@@ -73,7 +78,7 @@ public class HomeApplication {
         System.out.println("Select one of the following options: ");
         System.out.println("1. Course Service");
         System.out.println("2. Video service");
-        System.out.println("3. Assignment service");
+        System.out.println("3. Assignment-Submission service");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
     }
@@ -92,7 +97,7 @@ public class HomeApplication {
                         videoService.startVideoServiceForStudent();
                         break;
                     case 3:
-                        assigmentService.startAssignmentServiceForStudent();
+                        submissionService.startAssignmentSubmission();
                         break;
                     default:
                         return;

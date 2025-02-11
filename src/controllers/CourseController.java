@@ -86,7 +86,7 @@ public class CourseController implements ICourseController {
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (Course course : userCourses) {
-            stringBuilder.append(course.toString()).append("\n").append("\n").append("\n");
+            stringBuilder.append(course.toString()).append("\n");
         }
         return stringBuilder.toString();
     }

@@ -61,7 +61,7 @@ public class RegistrationController implements IRegistrationController {
         StringBuilder string = new StringBuilder();
         List<Course> courses = regRepository.getCoursesByUserId(user.getId());
         for (Course course : courses) {
-            string.append(course.getName()).append("\n");
+            string.append(course.toString()).append("\n");
         }
         if (string.toString().isEmpty()) {
             return "You do not have any registered course";
