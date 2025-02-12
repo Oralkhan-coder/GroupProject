@@ -2,9 +2,7 @@ package applications.service;
 
 import controllers.AssignmentController;
 import controllers.SubmissionController;
-import org.postgresql.gss.GSSOutputStream;
 
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;

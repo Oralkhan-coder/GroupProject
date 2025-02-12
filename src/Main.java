@@ -11,12 +11,9 @@ import data.interfaces.JB;
 import repositories.*;
 import repositories.interfaces.*;
 
-
 public class Main {
     public static void main(String[] args) {
-        JB database = new Postgre("jdbc:postgresql://localhost:5432",
-                "postgres", "Oral2007", "moodle");
-
+        JB database = Postgre.getInstance("localhost", "postgres", "kometa0707", "users");
 
         IUserRepository userRepository = new UserRepository(database);
         ICourseRepository courseRepository = new CourseRepository(database);
@@ -26,7 +23,6 @@ public class Main {
         IAssignmentRepository assignmentRepository = new AssignmentRepository(database);
         ISubmissionRepository submissionRepository = new SubmissionRepository(database);
 
-
         UserController userController = new UserController(userRepository);
         CourseController courseController = new CourseController(userRepository, courseRepository);
         AdminController adminController = new AdminController(userRepository, courseRepository, adminRepository);
@@ -35,20 +31,16 @@ public class Main {
         AssignmentController assignmentController = new AssignmentController(assignmentRepository);
         SubmissionController submissionController = new SubmissionController(userRepository, courseRepository, submissionRepository);
 
-
         CourseService courseService = new CourseService(courseController, registrationController);
         VideoService videoService = new VideoService(videoController);
         AssigmentService assigmentService = new AssigmentService(assignmentController, submissionController);
         SubmissionService submissionService = new SubmissionService(assignmentController, submissionController);
-
 
         AdminApplication adminApplication = new AdminApplication(adminController);
         HomeApplication homeApplication = new HomeApplication(userController, adminApplication,
                 courseService, videoService, assigmentService, submissionService);
         MainApplication application = new MainApplication(userController, homeApplication);
 
-
         application.startMainMenu();
     }
 }
-
