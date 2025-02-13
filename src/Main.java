@@ -13,7 +13,7 @@ import repositories.interfaces.*;
 
 public class Main {
     public static void main(String[] args) {
-        JB database = Postgre.getInstance("localhost", "postgres", "kometa0707", "users");
+        JB database = Postgre.getInstance("localhost", "postgres", "Oral2007", "moodle");
 
         IUserRepository userRepository = new UserRepository(database);
         ICourseRepository courseRepository = new CourseRepository(database);

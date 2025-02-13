@@ -57,6 +57,7 @@ public class HomeApplication {
                         break;
                     case 3:
                         adminApplication.startMenuForAdmin();
+                        break;
                     default:
                         return;
                 }

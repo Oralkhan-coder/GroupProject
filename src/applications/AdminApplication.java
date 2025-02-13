@@ -1,7 +1,6 @@
 package applications;
 
 import controllers.AdminController;
-import controllers.interfaces.IAdminController;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
