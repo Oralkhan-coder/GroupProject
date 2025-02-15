@@ -6,6 +6,7 @@ import repositories.interfaces.IUserRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class UserRepository implements IUserRepository {
@@ -60,33 +61,58 @@ public class UserRepository implements IUserRepository {
         return null;
     }
 
-    @Override
     public List<User> getUserByRole(String role) {
         List<User> users = new ArrayList<>();
         try (Connection connection = database.getConnection();
              PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE role = ?")) {
             stmt.setString(1, role);
-            ResultSet result = stmt.executeQuery();
-            while (result.next()) {
-                users.add(new User(
-                        result.getInt("id"),
-                        result.getString("username"),
-                        result.getString("password"),
-                        result.getString("email"),
-                        result.getString("role"),
-                        result.getInt("level")
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    users.add(new User(
+                            resultSet.getInt("id"),
+                            resultSet.getString("username"),
+                            resultSet.getString("password"),
+                            resultSet.getString("email"),
+                            resultSet.getString("role"),
+                            resultSet.getInt("level")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Sorting users by ID using lambda function
+        users.sort((u1, u2) -> Integer.compare(u1.getId(), u2.getId()));
+
+        return users;
+    }
+
+    public List<User> getAllStudents() {
+        List<User> students = new ArrayList<>();
+        try (Connection connection = database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE role = 'STUDENT'");
+             ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+                students.add(new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("email"),
+                        resultSet.getString("role"),
+                        resultSet.getInt("level")
                 ));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return users;
+
+        // Sorting students by ID using lambda function
+        students.sort((u1, u2) -> Integer.compare(u1.getId(), u2.getId()));
+
+        return students;
     }
 
-    @Override
-    public List<User> getAllStudents() {
-        return List.of();
-    }
 
     @Override
     public User getStudentWithCourses(int id) {
@@ -122,25 +148,30 @@ public class UserRepository implements IUserRepository {
         return null;
     }
 
-    @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         try (Connection connection = database.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet result = stmt.executeQuery("SELECT * FROM users")) {
-            while (result.next()) {
+             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
+             ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
                 users.add(new User(
-                        result.getInt("id"),
-                        result.getString("username"),
-                        result.getString("password"),
-                        result.getString("email"),
-                        result.getString("role"),
-                        result.getInt("level")
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("email"),
+                        resultSet.getString("role"),
+                        resultSet.getInt("level")
                 ));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        // Sorting users by ID using lambda function
+        users.sort((u1, u2) -> Integer.compare(u1.getId(), u2.getId()));
+
         return users;
     }
+
 }
+
